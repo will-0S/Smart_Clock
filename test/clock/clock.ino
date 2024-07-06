@@ -10,6 +10,7 @@
 #include <LiquidCrystal_I2C.h>
 
 RTC_DS1307 rtc;
+
 //Create liquid crystal object called 'lcd'
 const int lcdColumns = 20;
 const int lcdRows = 4; 

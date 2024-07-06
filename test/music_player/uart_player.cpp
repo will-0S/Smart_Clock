@@ -24,24 +24,20 @@ uint8_t uart_player::music_player__checksum(uint8_t *uart_commad, uint8_t length
 void uart_player::music_player__uart__polled_put(uint8_t *uart_commad, uint8_t length) {
   uint8_t checksum = music_player__checksum(uart_commad, length);
   Serial.println(checksum); 
-  myUart.write(uart_commad, length);  
-
+  myUart.write(uart_commad, length);   
   myUart.write(&checksum, 1);
 }
 
 void uart_player::music_player__loop_mode(uint8_t mode){
   uint8_t uart_commad[4] = {0xaa, 0x18, 0x01, 0x00};
-  uart_commad[3] = mode;
-
+  uart_commad[3] = mode; 
   music_player__uart__polled_put(uart_commad, 4);
 }
 
 void uart_player::music_player__play(void){
   uint8_t uart_commad[4] = {0xaa, 0x02, 0x00, 0xac};
 
-  for (int i = 0; i < 4; i++) {
-   // char temp = (char)uart_commad[i];
-   // myUart.Write(&temp);
+  for (int i = 0; i < 4; i++) { 
     myUart.write(uart_commad, sizeof(uart_commad));
   }
 }
