@@ -4,7 +4,7 @@
 #include "clock.h"
 
 unsigned long startTime;  // to store the start time
-char timeString[5]; 
+unsigned char timeString[5]; 
 myClock thisClock;
 
 void setup() {
