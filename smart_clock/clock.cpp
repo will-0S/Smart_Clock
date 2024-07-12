@@ -45,15 +45,15 @@ fullDate myClock::currentDate(void){
 
 const char* myClock::currentDay(void){
     DateTime now = rtc.now();
-    char daysOfWeek[7][12] = {
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat"
-    };
 
+    static const char* daysOfWeek[7] = {
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+    };
     return daysOfWeek[now.dayOfTheWeek()];
 }
