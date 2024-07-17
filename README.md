@@ -1,26 +1,22 @@
 # Project Title
 
-![Project Banner](path/Smart_Clock/images/board schematic scketch .png)
+Smart Alarm Clock
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+## Bill of Materials
+
+- ESP32
+- 2 LED 8x8 RBG Matrix display
+- DY-5v8f Music Player
+- DHT11 Tempetature Sensor
+- HC-SR501 PIR Motion Sensor
+- DS1307 RTC Module
+- 2 Small Speakers
+- Button
 
 ## Introduction
-Provide a brief introduction to your project here. Explain what it does, its purpose, and any other relevant information.
+The smart alarm clock is an alarm clock that its set up through an app using bluethooth technology. The clock displays the time in a LED display and provides the room it is at current temperature. The app is able to set up the alarm for any day of the week or multiple days of the week. There is a snooze button and a motion sensor to turn of the alarm.
 
-![Screenshot](path/to/your/screenshot-image.png)
-
-## Features
-List the key features of your project:
-- Feature 1
-- Feature 2
-- Feature 3
+ 
 
  
 
