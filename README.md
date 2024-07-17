@@ -1,6 +1,6 @@
 # Project Title
 
-![Project Banner](path/to/your/banner-image.png)
+![Project Banner](path/Smart_Clock/images/board schematic scketch .png)
 
 ## Table of Contents
 - [Introduction](#introduction)
