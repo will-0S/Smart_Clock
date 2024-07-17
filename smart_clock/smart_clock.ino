@@ -5,12 +5,16 @@
 #include "uart_player.h"
 #include <BluetoothSerial.h> 
 #include <ArduinoJson.h>
+#include "DHT.h"
 
+#define DHT11PIN 4
  
 
 BluetoothSerial SerialBT;
 uart_player musicPlayer;
 myClock thisClock;
+DHT dht(DHT11PIN, DHT11);
+
 
 //LED timming  
 unsigned char timeString[5]; 
@@ -63,33 +67,19 @@ void alarm(int setHour, int setMinute, bool setAlarm) {
     }
   } 
 }
+ 
 
-void parseTime(String timeStr, int &hour, int &minute) {
-  // Find the index of the colon
-  int colonIndex = timeStr.indexOf(':');
-  
-  // Extract the hour and minute substrings
-  String hourStr = timeStr.substring(0, colonIndex);//maybe change to colonIndex - 2, colonIndex
-  String minuteStr = timeStr.substring(colonIndex + 1);
-  
-  // Convert the substrings to integers
-  hour = hourStr.toInt();
-  minute = minuteStr.toInt();
+float getTemp(){
+  float humi = dht.readHumidity();
+  float temp = dht.readTemperature();
+  Serial.print("Temperature: ");
+  Serial.print((temp*9/5)+32);
+  Serial.print("ºF ");
+  Serial.print("Humidity: ");
+  Serial.println(humi);
+  return (temp*9/5)+32;
 }
-/*
- * days of the week code logic
- * if there are no days with the time, there will be a calculation, if the time is later on the day, the day will be set to today, 
- * if the time is earlier then now then the day will be set to tommorow.
- * 
- * if the day that the alarm is suppose to sound is today then the setbool will be set to true and that should be the only place where is set
- * therefore this function should be call right before alarm all the  time
- * 
- * essentially it could be call setting alarm function
- * 
- * so there should be a for loop that goes through the json check if today day is on the json string if its not then set off, if its on then set true
- * 
- * so maybe we should have a global json for time and global json for day
- */
+
 void updateDaysAndTime(const char* newJson) {
 StaticJsonDocument<200> newDoc;
   DeserializationError error = deserializeJson(newDoc, newJson); 
@@ -152,12 +142,7 @@ void setup() {
 
   //set up for motion sensor interrupt set up
   pinMode(2, INPUT);
-  attachInterrupt(digitalPinToInterrupt(2), buttonInterrupt, RISING);
-
-  //turn of button interrupt set up
-  //pinMode(2, INPUT_PULLUP);
-  //attachInterrupt(digitalPinToInterrupt(2), buttonInterrupt, FALLING); 
-
+  attachInterrupt(digitalPinToInterrupt(2), buttonInterrupt, RISING); 
   //turn of snooze interrupt set up
   pinMode(15, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(15), buttonSnooze, FALLING);  
@@ -237,40 +222,24 @@ void loop() {
     buttonStatus = false; 
     snoozeButtonStatus = false; 
     isAlarmTurnedOn = false;  
-
-    
-    
+ 
     // Print the incoming message to the serial monitor
     Serial.print("Received: ");
     Serial.println(incomingMessage);
     
-    updateDaysAndTime(incomingMessage.c_str());
-    //alarmState = true;  
-      
-//    incomingMessage.trim(); // Remove any leading/trailing whitespace or newline characters
-//    parseTime(incomingMessage, alarmHour, alarmMinute);
-//    tempAlarmHour = alarmHour;//the new set time becames the original alarm time
-//    tempAlarmMinute = alarmMinute;
-//    Serial.println(incomingMessage);
-//    SerialBT.println("got the data");
+    updateDaysAndTime(incomingMessage.c_str()); 
   }
 
- 
-  // Send data at regular intervals (e.g., every 2 seconds)
-    //String daysOfWeekJson = 
+  
    if (currentSendTime - lastSendTime >= 1000) {
     StaticJsonDocument<200> temp;
-    temp["temp"] = count;
+    temp["temp"] = getTemp();
     String dataToSend;
     serializeJson(temp, dataToSend); 
     SerialBT.println(dataToSend);
     Serial.print("Sent: ");
     Serial.println(dataToSend);    
-     lastSendTime = currentSendTime; 
-    count++;
-    if(count > 100){
-     count = 0;
-    }
+     lastSendTime = currentSendTime;  
   }
 
 
